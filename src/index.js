@@ -58,12 +58,13 @@ class Game extends React.Component {
       history : [{
         squares : Array(9).fill(null),
       }],
+      moveNumber: 0,
       xIsNext : true,
     };
   }
 
   handleClick(i){
-    const history = this.state.history;
+    const history = this.state.history.slice(0, this.state.moveNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
     if(this.calculateWinner(squares) || squares[i]){
@@ -77,14 +78,29 @@ class Game extends React.Component {
             squares : squares,
           }
         ]),
+        moveNumber: this.state.moveNumber + 1,
         xIsNext : !this.state.xIsNext,
       }
     );
   }
 
+  handleUndo() {
+    let moveNumber = this.state.moveNumber;
+    if (this.state.moveNumber > 0){
+      moveNumber = moveNumber - 1;
+      this.setState(
+        {
+          moveNumber: moveNumber,
+          xIsNext : (moveNumber % 2) === 0,
+        }
+      ); 
+    }
+  }
+
   render() {
     const history = this.state.history;
-    const current = history[history.length - 1];
+    //const current = history[history.length - 1];
+    const current = history[this.state.moveNumber];
     const winner = this.calculateWinner(current.squares);
 
     let status;
@@ -102,9 +118,12 @@ class Game extends React.Component {
           onClick={ (i) => this.handleClick(i) }
         />
         </div>
+
         <div className="game-info">
           <div>{status}</div>
           <ol>{/* TODO */}</ol>
+          <button onClick={() => this.handleUndo()}> Undo </button>
+          <button> Redo </button>
         </div>
       </div>
     );
