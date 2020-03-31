@@ -121,9 +121,7 @@ class Game extends React.Component {
 
         <div className="game-info">
           <div>{status}</div>
-          <ol>{/* TODO */}</ol>
           <button onClick={() => this.handleUndo()}> Undo </button>
-          <button> Redo </button>
         </div>
       </div>
     );
